@@ -1,5 +1,7 @@
 package com.android;
 
+import android.app.IntentService;
+import android.content.IntentSender;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -18,9 +20,12 @@ import java.util.Map;
  * Date: 20.11.13
  * Time: 18:09
  */
-public class Weather {
+public class Weather extends IntentService {
     private static final String requestLink = "http://export.yandex.ru/weather-ng/forecasts/";
 
+    public Weather(){
+        super("Weather");
+    }
 
     public static ArrayList<Map<String, Object>> getWeather(int cityId) {
         HttpClient httpClient = new DefaultHttpClient();
