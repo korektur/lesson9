@@ -40,12 +40,17 @@ public class Weather extends AsyncTask<String, Void, ArrayList<Map<String, Objec
             response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();
-            String[] keys = {"name", "country", "admin1", "admin2"};
+            String[] keys = {"name", "country", "admin1", "admin2", "woeid"};
             data = WeatherParser.Parse(inputStream, "place", keys);
         } catch (ClientProtocolException e) {
         } catch (IOException e) {
         }
         ;
         return data;
+    }
+
+    public ArrayList<Map<String, Object>> onPostExecute(ArrayList<Map<String, Object>>... res){
+        super.onPostExecute(res[0]);
+        return res[0];
     }
 }
