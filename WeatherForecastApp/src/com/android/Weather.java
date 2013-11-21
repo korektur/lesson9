@@ -1,7 +1,7 @@
 package com.android;
 
-import android.app.IntentService;
-import android.content.IntentSender;
+import android.net.Uri;
+import android.os.AsyncTask;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -11,6 +11,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -20,16 +24,15 @@ import java.util.Map;
  * Date: 20.11.13
  * Time: 18:09
  */
-public class Weather extends IntentService {
-    private static final String requestLink = "http://export.yandex.ru/weather-ng/forecasts/";
+public class Weather extends AsyncTask<String, Void, ArrayList<Map<String, Object>>> {
+    private static final String requestLink = "http://query.yahooapis.com/v1/public/yql?q=select*from%20geo.places%20where%20text=";
 
-    public Weather(){
-        super("Weather");
-    }
-
-    public static ArrayList<Map<String, Object>> getWeather(int cityId) {
+    @Override
+    public ArrayList<Map<String, Object>> doInBackground(String... city) {
         HttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(requestLink + cityId + ".xml");
+        String cityenc = Uri.encode(city[0]);
+        String link =  requestLink + "%22" + cityenc + "%22" + "&format=xml";
+        HttpGet httpGet = new HttpGet(link);
         HttpResponse response;
         InputStream inputStream;
         ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
@@ -37,8 +40,8 @@ public class Weather extends IntentService {
             response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();
-            String[] keys = {"temperature", "weather_type", "wind_speed", "daytime"};
-            data = Parser.Parse(inputStream, "fact", keys);
+            String[] keys = {"name", "country", "admin1", "admin2"};
+            data = WeatherParser.Parse(inputStream, "place", keys);
         } catch (ClientProtocolException e) {
         } catch (IOException e) {
         }

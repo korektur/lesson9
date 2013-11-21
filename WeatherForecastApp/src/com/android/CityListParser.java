@@ -21,7 +21,7 @@ import java.util.Map;
  * Date: 20.11.13
  * Time: 16:25
  */
-public class Parser {
+public class CityListParser {
 
     public static ArrayList<Map<String, Object>> Parse(InputStream inputStream,String tagName,  String[] keys) {
         ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();

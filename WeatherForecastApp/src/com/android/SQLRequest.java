@@ -31,9 +31,6 @@ public class SQLRequest {
             " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName + " TEXT NOT NULL, "
             + keyCityId + " INTEGER);";
 
-
-
-
     private static class DBHelper extends SQLiteOpenHelper {
         public DBHelper(Context context){
             super(context, DataBaseName, null, Database_Version);
