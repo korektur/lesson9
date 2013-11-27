@@ -12,12 +12,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Settings"
-                android:id="@+id/settingbutton" android:layout_gravity="left|center_vertical"/>
+                android:id="@+id/settingbutton" android:layout_gravity="left|center_vertical"
+                android:layout_weight="2"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Renew"
-                android:id="@+id/renewbutton" android:layout_gravity="center_horizontal|top"/>
+                android:id="@+id/renewbutton" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
     </LinearLayout>
     <HorizontalScrollView
             android:layout_width="fill_parent"
@@ -29,7 +30,6 @@
         <TextView
                 android:layout_width="274dp"
                 android:layout_height="83dp"
-                android:text="City"
                 android:id="@+id/cityname"
                 android:textSize="60dp"
                 android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/temperaturetext"
-                android:textSize="60dp" android:text="C" android:textStyle="bold"
+                android:textSize="60dp" android:textStyle="bold"
                 android:layout_centerHorizontal="true" android:layout_below="@+id/cityname"
                 android:layout_alignRight="@+id/cityname" android:layout_toRightOf="@+id/imageView"
                 android:layout_alignBottom="@+id/imageView"/>
@@ -52,7 +52,7 @@
                 android:layout_height="41dp"
                 android:id="@+id/weathertext" android:layout_alignLeft="@+id/cityname"
                 android:layout_below="@+id/imageView" android:layout_alignRight="@+id/cityname"
-                android:textSize="40dp" android:text="Weather"/>
+                android:textSize="40dp"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
@@ -69,7 +69,6 @@
                     <TextView
                             android:layout_width="97dp"
                             android:layout_height="wrap_content"
-                            android:text="Day"
                             android:id="@+id/day1" android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true" android:layout_alignParentBottom="true"
                             android:textSize="40dp"/>
@@ -78,19 +77,19 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/about2ay1" android:layout_toRightOf="@+id/day1"
                             android:layout_alignTop="@+id/day1" android:layout_alignParentRight="true"
-                            android:layout_alignBottom="@+id/day1" android:text="About" android:textSize="20dp"/>
+                            android:layout_alignBottom="@+id/day1" android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
             <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
                           android:layout_height="match_parent" android:layout_gravity="center_horizontal|top"
                           android:layout_weight="1" android:id="@+id/linearLayout">
                 <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
-                    <TextView android:layout_width="97dp" android:layout_height="wrap_content" android:text="Day"
+                    <TextView android:layout_width="97dp" android:layout_height="wrap_content"
                               android:id="@+id/day2" android:layout_alignParentLeft="true"
                               android:layout_alignParentTop="true" android:layout_alignParentBottom="true"
                               android:textSize="40dp"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="About" android:id="@+id/aboutday2"
+                              android:id="@+id/aboutday2"
                               android:layout_toRightOf="@+id/day2" android:layout_alignTop="@+id/day2"
                               android:layout_alignParentRight="true" android:layout_alignBottom="@+id/day2"
                               android:textSize="20dp"/>
@@ -100,12 +99,12 @@
                           android:layout_height="match_parent" android:layout_gravity="center_horizontal|top"
                           android:layout_weight="1" android:id="@+id/linearLayout1">
                 <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
-                    <TextView android:layout_width="97dp" android:layout_height="wrap_content" android:text="Day"
+                    <TextView android:layout_width="97dp" android:layout_height="wrap_content"
                               android:id="@+id/day3" android:layout_alignParentLeft="true"
                               android:layout_alignParentTop="true" android:layout_alignParentBottom="true"
                               android:textSize="40dp"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="About" android:id="@+id/aboutday3"
+                              android:id="@+id/aboutday3"
                               android:layout_toRightOf="@+id/day3" android:layout_alignTop="@+id/day3"
                               android:layout_alignParentRight="true" android:layout_alignBottom="@+id/day3"
                               android:textSize="20dp"/>

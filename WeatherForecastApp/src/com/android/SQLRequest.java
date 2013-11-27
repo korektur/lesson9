@@ -15,11 +15,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SQLRequest {
 
     private static final String DataBaseName = "WeatherForecasts";
-    private static final String cityTableName = "CityTable";
+
+    private static final String weatherTableName = "WeatherTable";
+    private static final String keyTempNow = "tempNowKey";
+    private static final String keyWeatherNow = "weatherNowKey";
+    private static final String[] keyTempLow = {"tempLowKey1", "tempLowKey2", "tempLowKey3"};
+    private static final String[] keyTempHigh = {"tempHighKey1", "tempHighKey2", "tempHighKey3"};
+    private static final String[] keyWeatherThen = {"weatherThenKey1", "weatherThenKey2", "weatherThenKey3"};
     private static final String keyId = "_id";
     private static final String keyCityId = "cityId";
     private static final String keyCountryName = "countryKey";
     private static final String keyCityName = "cityNameKey";
+    private static final String[] keyDate = {"date1Key", "date2Key", "date3Key"};
     private static final int Database_Version = 1;
 
     private boolean opened;
@@ -27,9 +34,14 @@ public class SQLRequest {
     private SQLiteDatabase database;
     private DBHelper helper;
 
-    private static final String citiesDataBaseCreator = "CREATE TABLE " + cityTableName + " (" + keyId +
+
+    private static final String weatherDataBaseCreator = "CREATE TABLE " + weatherTableName + " (" + keyId +
             " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName + " TEXT NOT NULL, "
-            + keyCityId + " INTEGER);";
+            + keyTempNow + " DOUBLE, " + keyWeatherNow + " TEXT NOT NULL, " + keyTempLow[0] + " DOUBLE, " +
+            keyTempLow[1] + " DOUBLE, " + keyTempLow[2] + " DOUBLE, " + keyTempHigh[0] + " TEXT NOT NULL, " +
+            keyTempHigh[1] + " TEXT NOT NULL, " + keyTempHigh[2] + " TEXT NOT NULL, " + keyWeatherThen[0] + " TEXT NOT NULL, " +
+            keyWeatherThen[2] + " TEXT NOT NULL, " + keyWeatherThen[3] + " TEXT NOT NULL, " + keyDate[0] + " TEXT NOT NULL, "
+            + keyDate[1] + " TEXT NOT NULL, " + keyDate[2] + " TEXT NOT NULL, " + keyCityId + " INTEGER);";
 
     private static class DBHelper extends SQLiteOpenHelper {
         public DBHelper(Context context){
@@ -38,12 +50,12 @@ public class SQLRequest {
 
         @Override
         public void onCreate(SQLiteDatabase database){
-            database.execSQL(citiesDataBaseCreator);
+            database.execSQL(weatherDataBaseCreator);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldV, int newV){
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + cityTableName);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + weatherTableName);
         }
     }
 
@@ -56,18 +68,34 @@ public class SQLRequest {
         opened = true;
     }
 
-    public void addCity(String cityName, String countryName, int id){
+    public void addCity(City city){
         if (opened){
             ContentValues values = new ContentValues();
-            values.put(keyCityName, cityName);
-            values.put(keyCountryName, countryName);
-            values.put(keyCityId, id);
-            database.insert(cityTableName, null, values);
+            values.put(keyCityName, city.name);
+            values.put(keyCityId, city.id);
+            values.put(keyCountryName, city.country);
+            values.put(keyTempNow, city.tempNow);
+            values.put(keyWeatherNow, city.weatherNow);
+            for(int i = 0; i < 3; i++){
+                values.put(keyTempLow[i], city.tempHigh[i]);
+                values.put(keyWeatherThen[i], city.weather[i]);
+                values.put(keyTempHigh[i], city.tempHigh[i]);
+                values.put(keyTempLow[i], city.tempLow[i]);
+
+            }
+
+            database.insert(weatherTableName, null, values);
         }
     }
 
-    public Cursor getCities(String cityName){
-        return database.query(cityTableName, null, keyCityName + "=" + cityName + "%",null, null, null, keyId + " asc", null);
+
+    public Cursor getAddedCities(){
+        return database.query(weatherTableName, null, null, null, null, null, keyId +  " asc", null);
     }
 
+    public void deleteCity(int id){
+        if (opened){
+            database.delete(weatherTableName, keyCityId + "=?", null);
+        }
+    }
 }

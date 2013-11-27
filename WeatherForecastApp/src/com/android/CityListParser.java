@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class CityListParser {
 
-    public static ArrayList<Map<String, Object>> Parse(InputStream inputStream,String tagName,  String[] keys) {
+    public static ArrayList<Map<String, Object>> Parse(InputStream inputStream, String tagName, String[] keys) {
         ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         try {
             DocumentBuilderFactory dBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -31,20 +31,19 @@ public class CityListParser {
             Document document = dBuilder.parse(inputStream);
             document.getDocumentElement().normalize();
             NodeList nodeList = document.getElementsByTagName(tagName);
-            if (nodeList.getLength() > 0) {
-                for (int i = 0; i < nodeList.getLength(); i++) {
-                    Element elem = (Element) nodeList.item(i);
-                    Element[] elements = new Element[keys.length];
-                    for(int j = 0; j < keys.length; j++){
-                        elements[j] = (Element) elem.getElementsByTagName(keys[j]).item(0);
-                    }
-                    HashMap<String, Object> parsedNode = new HashMap<String, Object>();
-                    for(int j = 0; j < keys.length; j++){
-                        parsedNode.put(keys[j], elements[j].getFirstChild().getNodeValue());
-                    }
-                    data.add(parsedNode);
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element elem = (Element) nodeList.item(i);
+                Element[] elements = new Element[keys.length];
+                for (int j = 0; j < keys.length; j++) {
+                    elements[j] = (Element) elem.getElementsByTagName(keys[j]).item(0);
                 }
+                HashMap<String, Object> parsedNode = new HashMap<String, Object>();
+                for (int j = 0; j < keys.length; j++) {
+                    parsedNode.put(keys[j], elements[j].getFirstChild().getNodeValue());
+                }
+                data.add(parsedNode);
             }
+
         } catch (ParserConfigurationException e) {
         } catch (IOException e) {
         } catch (SAXException e) {

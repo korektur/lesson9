@@ -41,7 +41,7 @@ public class Weather extends AsyncTask<String, Void, ArrayList<Map<String, Objec
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();
             String[] keys = {"name", "country", "admin1", "admin2", "woeid"};
-            data = WeatherParser.Parse(inputStream, "place", keys);
+            data = CityListParser.Parse(inputStream, "place", keys);
         } catch (ClientProtocolException e) {
         } catch (IOException e) {
         }
