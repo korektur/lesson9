@@ -3,6 +3,7 @@ package com.android;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -39,7 +40,12 @@ public class CityListParser {
                 }
                 HashMap<String, Object> parsedNode = new HashMap<String, Object>();
                 for (int j = 0; j < keys.length; j++) {
-                    parsedNode.put(keys[j], elements[j].getFirstChild().getNodeValue());
+                    Node child = elements[j].getFirstChild();
+                    String attribute = "";
+                    if (child != null){
+                        attribute = child.getNodeValue();
+                    }
+                    parsedNode.put(keys[j], attribute);
                 }
                 data.add(parsedNode);
             }

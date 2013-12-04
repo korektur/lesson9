@@ -2,6 +2,7 @@ package com.android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,7 @@ public class Settings extends Activity {
     final int[] layouts = {R.id.cityName, R.id.countryName};
     final ArrayList<Integer> id = new ArrayList<Integer>();
     final ArrayList<String> cities = new ArrayList<String>();
+    final ArrayList<String> prop = new ArrayList<String>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +52,8 @@ public class Settings extends Activity {
                             String name2 = (String) data.get(i).get("admin1") + ", " + (String) data.get(i).get("admin2");
                             int woeid = Integer.parseInt((String) data.get(i).get("woeid"));
                             id.add(woeid);
-                            cities.add((String) data.get(i).get("name"));
+                            cities.add(name1);
+                            prop.add(name2);
                             parsedData.get(i).put("name", name1);
                             parsedData.get(i).put("prop", name2);
                         }
@@ -67,23 +70,11 @@ public class Settings extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Main.
-                SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                int num = preferences.getInt("numOfCities", 0);
-                boolean alreadyAdded = false;
-                for (int i = 0; i < num; i++) {
-                    int woeid = preferences.getInt("cityId" + i, 0);
-                    if (id == Settings.this.id.get(position))
-                        alreadyAdded = true;
-                }
-                if (!alreadyAdded) {
-                    editor.putInt("numOfCities", num + 1);
-                    editor.putString("cityName" + num, cities.get(position));
-                    editor.putInt("cityId" + num, Settings.this.id.get(position));
-                    editor.commit();
-                }
-
+                Intent intent = new Intent(Settings.this, Main.class);
+                intent.putExtra("cityName", Settings.this.cities.get(position));
+                intent.putExtra("cityId", Settings.this.id.get(position));
+                intent.putExtra("cityProp", Settings.this.prop.get(position));
+                startActivity(intent);
             }
         });
 

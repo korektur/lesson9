@@ -22,7 +22,44 @@ import java.util.Map;
  * Time: 16:24
  */
 public class Main extends Activity {
-    static SharedPreferences preferences;
+
+
+
+    private void saveCity(String cityName, String cityProp, int cityId) {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        int numOfCities = preferences.getInt("numOfCities", 0);
+        boolean added = false;
+        for (int i = 0; i < numOfCities && !added; i++) {
+            int id = preferences.getInt("cityId" + i, 0);
+            if (id == cityId)
+                added = true;
+        }
+        if (!added) {
+            SharedPreferences.Editor editor = preferences.edit();
+            ++numOfCities;
+            editor.putInt("numOfCities", numOfCities);
+            editor.putString("cityName" + numOfCities, cityName);
+            editor.putString("cityProp" + numOfCities, cityProp);
+            editor.putInt("cityId" + numOfCities, cityId);
+            editor.commit();
+        }
+    }
+
+    private ArrayList<Map<String, Object>> getCitiesList() {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+        int numOfCities = preferences.getInt("numOfCities", 0);
+        for (int i = 1; i <= numOfCities; i++) {
+            data.add(new HashMap<String, Object>());
+            String cityName = preferences.getString("cityName" + i, "");
+            int cityId = preferences.getInt("cityId" + i, 0);
+            String cityProp = preferences.getString("cityProp" + i, "");
+            data.get(i - 1).put("cityName", cityName);
+            data.get(i - 1).put("cityId", cityId);
+            data.get(i - 1).put("cityProp", cityProp);
+        }
+        return data;
+    }
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -36,29 +73,31 @@ public class Main extends Activity {
                 startActivity(intent);
             }
         });
-        preferences = getPreferences(MODE_PRIVATE);
-        final int numOfCities = preferences.getInt("numOfCities", 0);
-        final String[] cities = new String[numOfCities];
-        final int[] citiesId = new int[numOfCities];
-        for (int i = 0; i < numOfCities; i++) {
-            cities[i] = preferences.getString("cityName" + i, "");
-            citiesId[i] = preferences.getInt("cityId" + i, 0);
+        Intent intent = getIntent();
+        String cityName = intent.getStringExtra("cityName");
+        String cityProp = intent.getStringExtra("cityProp");
+        int id = intent.getIntExtra("cityId", 0);
+        if (id != 0) {
+            saveCity(cityName, cityProp, id);
         }
-        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < numOfCities; i++) {
-            data.add(new HashMap<String, Object>());
-            data.get(i).put("cityName", cities[i]);
-            data.get(i).put("cityId", citiesId[i]);
-        }
+        String[] keys = {"cityName", "cityProp"};
+        final int[] layouts = {R.id.cityName, R.id.countryName};
         ListView citiesList = (ListView) findViewById(R.id.addedCities);
-        //SimpleAdapter adapter = new SimpleAdapter(Main.this, data, )
+        ArrayList<Map<String, Object>> data = getCitiesList();
+        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.citynode, keys, layouts);
+        citiesList.setAdapter(adapter);
         Button renew = (Button) findViewById(R.id.renewbutton);
         renew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < numOfCities; i++) {
 
-                }
+            }
+        });
+
+        citiesList.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
             }
         });
 
