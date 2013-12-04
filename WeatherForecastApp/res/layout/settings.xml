@@ -13,7 +13,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="City"
-                android:id="@+id/editText" android:layout_gravity="left|center_vertical" android:layout_weight="3"/>
+                android:id="@+id/editText" android:layout_gravity="left|center_vertical" android:layout_weight="3"
+                android:inputType="text"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

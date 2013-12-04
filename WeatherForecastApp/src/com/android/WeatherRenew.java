@@ -1,6 +1,5 @@
 package com.android;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,8 +11,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Руслан

@@ -17,6 +17,7 @@ public class SQLRequest {
     private static final String DataBaseName = "WeatherForecasts";
 
     private static final String weatherTableName = "WeatherTable";
+    private static final String cityListTable = "CityTable";
     private static final String keyTempNow = "tempNowKey";
     private static final String keyWeatherNow = "weatherNowKey";
     private static final String[] keyTempLow = {"tempLowKey1", "tempLowKey2", "tempLowKey3"};
@@ -35,6 +36,10 @@ public class SQLRequest {
     private DBHelper helper;
 
 
+    private static final String cityDataBaseCreator = "CREATE TABLE " + cityListTable + " (" + keyId +
+            " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName +
+            " TEXT NOT NULL, " + keyCityId + " INTEGER);";
+
     private static final String weatherDataBaseCreator = "CREATE TABLE " + weatherTableName + " (" + keyId +
             " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName + " TEXT NOT NULL, "
             + keyTempNow + " DOUBLE, " + keyWeatherNow + " TEXT NOT NULL, " + keyTempLow[0] + " DOUBLE, " +
@@ -44,44 +49,45 @@ public class SQLRequest {
             + keyDate[1] + " TEXT NOT NULL, " + keyDate[2] + " TEXT NOT NULL, " + keyCityId + " INTEGER);";
 
     private static class DBHelper extends SQLiteOpenHelper {
-        public DBHelper(Context context){
+        public DBHelper(Context context) {
             super(context, DataBaseName, null, Database_Version);
         }
 
         @Override
-        public void onCreate(SQLiteDatabase database){
+        public void onCreate(SQLiteDatabase database) {
             database.execSQL(weatherDataBaseCreator);
+            database.execSQL(cityDataBaseCreator);
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldV, int newV){
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldV, int newV) {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + weatherTableName);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + cityListTable);
         }
     }
 
-    public SQLRequest(Context context){
+    public SQLRequest(Context context) {
         this.context = context;
         this.opened = false;
     }
 
-    public void openDB(){
+    public void openDB() {
         opened = true;
     }
 
-    public void addCity(City city){
-        if (opened){
+    public void addCity(City city) {
+        if (opened) {
             ContentValues values = new ContentValues();
             values.put(keyCityName, city.name);
             values.put(keyCityId, city.id);
             values.put(keyCountryName, city.country);
             values.put(keyTempNow, city.tempNow);
             values.put(keyWeatherNow, city.weatherNow);
-            for(int i = 0; i < 3; i++){
+            for (int i = 0; i < 3; i++) {
                 values.put(keyTempLow[i], city.tempHigh[i]);
                 values.put(keyWeatherThen[i], city.weather[i]);
                 values.put(keyTempHigh[i], city.tempHigh[i]);
                 values.put(keyTempLow[i], city.tempLow[i]);
-
             }
 
             database.insert(weatherTableName, null, values);
@@ -89,13 +95,14 @@ public class SQLRequest {
     }
 
 
-    public Cursor getAddedCities(){
-        return database.query(weatherTableName, null, null, null, null, null, keyId +  " asc", null);
+    public Cursor getAddedCities() {
+        return database.query(cityListTable, null, null, null, null, null, keyId + " asc", null);
     }
 
-    public void deleteCity(int id){
-        if (opened){
-            database.delete(weatherTableName, keyCityId + "=?", null);
+    public void deleteCity(int id) {
+        if (opened) {
+            database.delete(weatherTableName, keyCityId + "=" + id, null);
+            database.delete(cityListTable, keyCityId + "=" + id, null);
         }
     }
 }
