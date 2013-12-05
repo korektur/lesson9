@@ -45,7 +45,6 @@ public class Weather extends AsyncTask<String, Void, ArrayList<Map<String, Objec
         } catch (ClientProtocolException e) {
         } catch (IOException e) {
         }
-        ;
         return data;
     }
 

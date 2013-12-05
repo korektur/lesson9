@@ -38,7 +38,6 @@ public class WeatherRenew extends AsyncTask<City, Void, ArrayList<City>> {
             } catch (ClientProtocolException e) {
             } catch (IOException e) {
             }
-            ;
 
         }
         return cities;

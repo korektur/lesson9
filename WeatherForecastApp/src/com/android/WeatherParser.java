@@ -1,7 +1,5 @@
 package com.android;
 
-import android.content.Intent;
-import android.util.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -13,9 +11,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +22,6 @@ import java.util.Map;
 public class WeatherParser {
 
     public static City Parse(InputStream inputStream, City city) {
-        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         try {
             DocumentBuilderFactory dBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dBuilderFactory.newDocumentBuilder();
@@ -38,7 +32,6 @@ public class WeatherParser {
             int j = 0;
             if (nodeList.getLength() > 0) {
                 for (int i = 0; i < nodeList.getLength(); i++) {
-                    int k = nodeList.getLength();
 
                     Node elem = nodeList.item(i);
                     if ("yweather:condition".equals(elem.getNodeName())) {
