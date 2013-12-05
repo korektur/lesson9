@@ -58,7 +58,6 @@ public class WeatherParser {
         } catch (IOException e) {
         } catch (SAXException e) {
         }
-        ;
         return city;
     }
 }

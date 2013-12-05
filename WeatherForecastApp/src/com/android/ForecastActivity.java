@@ -12,11 +12,6 @@ import com.example.WeatherForecastApp.R;
 import java.util.concurrent.ExecutionException;
 
 
-/**
- * Created by Руслан on 05.12.13.
- */
-
-
 public class ForecastActivity extends Activity {
     Button backButton;
     Button renewButton;

@@ -27,14 +27,14 @@ public class WeatherRenew extends AsyncTask<City, Void, ArrayList<City>> {
         ArrayList<City> cities = new ArrayList<City>();
         HttpResponse response;
         InputStream inputStream;
-        for (int i = 0; i < city.length; i++) {
-            String link = requestLink + city[i].id + "&u=c";
+        for (City c: city) {
+            String link = requestLink + c.id + "&u=c";
             HttpGet httpGet = new HttpGet(link);
             try {
                 response = httpClient.execute(httpGet);
                 HttpEntity entity = response.getEntity();
                 inputStream = entity.getContent();
-                cities.add(WeatherParser.Parse(inputStream, city[i]));
+                cities.add(WeatherParser.Parse(inputStream, c));
             } catch (ClientProtocolException e) {
             } catch (IOException e) {
             }

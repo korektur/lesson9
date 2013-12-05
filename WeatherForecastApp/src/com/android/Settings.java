@@ -1,9 +1,7 @@
 package com.android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -41,15 +39,15 @@ public class Settings extends Activity {
                 String name = editText.getText().toString();
                 Weather weather = new Weather();
                 weather.execute(name);
-                ArrayList<Map<String, Object>> data = null;
+                ArrayList<Map<String, Object>> data;
                 try {
                     data = weather.get();
                     if (data != null) {
                         ArrayList<Map<String, Object>> parsedData = new ArrayList<Map<String, Object>>();
                         for (int i = 0; i < data.size(); i++) {
                             parsedData.add(new HashMap<String, Object>());
-                            String name1 = (String) data.get(i).get("name") + ", " + (String) data.get(i).get("country");
-                            String name2 = (String) data.get(i).get("admin1") + ", " + (String) data.get(i).get("admin2");
+                            String name1 = data.get(i).get("name") + ", " + data.get(i).get("country");
+                            String name2 = data.get(i).get("admin1") + ", " + data.get(i).get("admin2");
                             int woeid = Integer.parseInt((String) data.get(i).get("woeid"));
                             id.add(woeid);
                             cities.add(name1);
@@ -63,7 +61,6 @@ public class Settings extends Activity {
                 } catch (ExecutionException e) {
                 } catch (InterruptedException e) {
                 }
-                ;
             }
         });
 

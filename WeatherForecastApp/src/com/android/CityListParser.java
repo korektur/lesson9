@@ -54,7 +54,6 @@ public class CityListParser {
         } catch (IOException e) {
         } catch (SAXException e) {
         }
-        ;
         return data;
     }
 }
