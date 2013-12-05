@@ -1,5 +1,7 @@
 package com.android;
 
+import android.content.Intent;
+import android.util.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,32 +33,31 @@ public class WeatherParser {
             DocumentBuilder dBuilder = dBuilderFactory.newDocumentBuilder();
             Document document = dBuilder.parse(inputStream);
             document.getDocumentElement().normalize();
-            NodeList nodeList = document.getElementsByTagName("item");
+            Node node = document.getElementsByTagName("item").item(0);
+            NodeList nodeList = node.getChildNodes();
+            int j = 0;
             if (nodeList.getLength() > 0) {
                 for (int i = 0; i < nodeList.getLength(); i++) {
-                    /*Element elem = (Element) nodeList.item(i);
-                    Element[] elements = new Element[keys.length];
-                    for(int j = 0; j < keys.length; j++){
-                        elements[j] = (Element) elem.getElementsByTagName(keys[j]).item(0);
-                    }
-                    HashMap<String, Object> parsedNode = new HashMap<String, Object>();
-                    for(int j = 0; j < keys.length; j++){
-                        parsedNode.put(keys[j], elements[j].getFirstChild().getNodeValue());
-                    } */
-                    Element elem = (Element) nodeList.item(i);
-                    Element description = (Element) elem.getElementsByTagName("yweather:condition");
-                    city.weatherNow = description.getAttribute("text");
-                    city.weatherNowCode = Integer.parseInt(description.getAttribute("code"));
-                    city.tempNow = Double.parseDouble(description.getAttribute("temp"));
-                    city.date = description.getAttribute("date");
-                    NodeList forecasts = elem.getElementsByTagName("yweather:forecast");
-                    for(int j = 0; j < 3; j++){
-                        Element forecast = (Element)forecasts.item(j);
-                        city.dates[j] = forecast.getAttribute("date");
-                        city.tempLow[j] = Double.parseDouble(forecast.getAttribute("low"));
-                        city.tempLow[j] = Double.parseDouble(forecast.getAttribute("high"));
-                        city.weather[j] = forecast.getAttribute("text");
-                        city.weatherCode[j] = Integer.parseInt(forecast.getAttribute("code"));
+                    int k = nodeList.getLength();
+
+                    Node elem = nodeList.item(i);
+                    if ("yweather:condition".equals(elem.getNodeName())) {
+                        Element description = (Element) elem;
+                        city.weatherNow = description.getAttribute("text");
+                        city.weatherNowCode = Integer.parseInt(description.getAttribute("code"));
+                        city.tempNow = Double.parseDouble(description.getAttribute("temp"));
+                        city.date = description.getAttribute("date");
+                    } else {
+                        if ("yweather:forecast".equals(elem.getNodeName()) && j < 3){
+                            Element forecast = (Element) elem;
+                            city.dates[j] = forecast.getAttribute("date");
+                            city.tempLow[j] = Double.parseDouble(forecast.getAttribute("low"));
+                            city.tempLow[j] = Double.parseDouble(forecast.getAttribute("high"));
+                            city.weather[j] = forecast.getAttribute("text");
+                            city.weatherCode[j] = Integer.parseInt(forecast.getAttribute("code"));
+                            j++;
+                        }
+
                     }
                 }
             }

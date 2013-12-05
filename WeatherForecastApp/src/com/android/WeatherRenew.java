@@ -28,7 +28,7 @@ public class WeatherRenew extends AsyncTask<City, Void, ArrayList<City>> {
         HttpResponse response;
         InputStream inputStream;
         for (int i = 0; i < city.length; i++) {
-            String link = requestLink + city[i] + "&u=c";
+            String link = requestLink + city[i].id + "&u=c";
             HttpGet httpGet = new HttpGet(link);
             try {
                 response = httpClient.execute(httpGet);

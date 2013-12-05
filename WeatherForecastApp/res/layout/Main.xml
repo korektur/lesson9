@@ -18,7 +18,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Renew"
-                android:id="@+id/renewbutton" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
+                android:id="@+id/renewAllButton" android:layout_gravity="center_horizontal|top" android:layout_weight="1"/>
     </LinearLayout>
     <ListView
             android:layout_width="fill_parent"

@@ -13,5 +13,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.android.Settings"/>
+        <activity android:name="com.android.ForeCast"/>
+        <activity android:name="com.android.ForecastActivity"/>
     </application>
 </manifest>

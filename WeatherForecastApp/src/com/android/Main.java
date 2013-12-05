@@ -3,9 +3,9 @@ package com.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Time: 16:24
  */
 public class Main extends Activity {
-
+    ListView citiesList;
 
 
     private void saveCity(String cityName, String cityProp, int cityId) {
@@ -82,15 +82,30 @@ public class Main extends Activity {
         }
         String[] keys = {"cityName", "cityProp"};
         final int[] layouts = {R.id.cityName, R.id.countryName};
-        ListView citiesList = (ListView) findViewById(R.id.addedCities);
-        ArrayList<Map<String, Object>> data = getCitiesList();
+        citiesList = (ListView) findViewById(R.id.addedCities);
+        final ArrayList<Map<String, Object>> data = getCitiesList();
         SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.citynode, keys, layouts);
         citiesList.setAdapter(adapter);
-        Button renew = (Button) findViewById(R.id.renewbutton);
+        Button renew = (Button) findViewById(R.id.renewAllButton);
         renew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+
+        citiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int cityId = (Integer) data.get(position).get("cityId");
+                String cityName = (String) data.get(position).get("cityName");
+                String cityProp = (String) data.get(position).get("cityProp");
+                Intent intent = new Intent(Main.this, ForecastActivity.class);
+                intent.putExtra("cityId", cityId);
+                intent.putExtra("cityName", cityName);
+                intent.putExtra("cityProp", cityProp);
+                startActivity(intent);
             }
         });
 
