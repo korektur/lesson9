@@ -2,8 +2,6 @@ package com.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -149,6 +147,15 @@ public class ForecastActivity extends Activity {
                 } catch (ExecutionException e) {
                 }
                 renewFields(city);
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ForecastActivity.this, Main.class);
+                intent.putExtra("cityId", cityId);
+                startActivity(intent);
             }
         });
 

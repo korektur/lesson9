@@ -44,7 +44,9 @@ public class SQLRequest {
             keyTempLow[1] + " DOUBLE, " + keyTempLow[2] + " DOUBLE, " + keyTempHigh[0] + " TEXT NOT NULL, " +
             keyTempHigh[1] + " TEXT NOT NULL, " + keyTempHigh[2] + " TEXT NOT NULL, " + keyWeatherThen[0] + " TEXT NOT NULL, " +
             keyWeatherThen[2] + " TEXT NOT NULL, " + keyWeatherThen[3] + " TEXT NOT NULL, " + keyDate[0] + " TEXT NOT NULL, "
-            + keyDate[1] + " TEXT NOT NULL, " + keyDate[2] + " TEXT NOT NULL, " + keyCityId + " INTEGER);";
+            + keyDate[1] + " TEXT NOT NULL, " + keyDate[2] + " TEXT NOT NULL, " + keyCityId + " INTEGER, " +
+            keyWeatherCodeNow + " TEXT NOT NULL, " + keyWeatherCode[0] + " TEXT NOT NULL, " + keyWeatherCode[1] + " TEXT NOT NULL, " +
+            keyWeatherCode[2] + " TEXT NOT NULL);";
 
     private static class DBHelper extends SQLiteOpenHelper {
         public DBHelper(Context context) {
@@ -79,12 +81,13 @@ public class SQLRequest {
             values.put(keyCountryName, city.country);
             values.put(keyTempNow, city.tempNow);
             values.put(keyWeatherNow, city.weatherNow);
-            values.put
+            values.put(keyWeatherCodeNow, city.weatherNowCode);
             for (int i = 0; i < 3; i++) {
                 values.put(keyTempLow[i], city.tempHigh[i]);
                 values.put(keyWeatherThen[i], city.weather[i]);
                 values.put(keyTempHigh[i], city.tempHigh[i]);
                 values.put(keyTempLow[i], city.tempLow[i]);
+                values.put(keyWeatherCode[i], city.weatherCode[i]);
             }
 
             database.insert(weatherTableName, null, values);
@@ -92,8 +95,8 @@ public class SQLRequest {
     }
 
 
-    public Cursor getAddedCities() {
-        return database.query(weatherTableName, null, null, null, null, null, keyId + " asc", null);
+    public Cursor getCityForecast(int id) {
+        return database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null, keyId + " asc", null);
     }
 
     public void deleteCity(int id) {

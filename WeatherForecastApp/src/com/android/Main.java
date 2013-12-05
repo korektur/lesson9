@@ -77,7 +77,7 @@ public class Main extends Activity {
         String cityName = intent.getStringExtra("cityName");
         String cityProp = intent.getStringExtra("cityProp");
         int id = intent.getIntExtra("cityId", 0);
-        if (id != 0) {
+        if (id != 0 && cityName != null) {
             saveCity(cityName, cityProp, id);
         }
         String[] keys = {"cityName", "cityProp"};
