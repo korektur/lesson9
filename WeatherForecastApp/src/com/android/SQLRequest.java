@@ -95,8 +95,22 @@ public class SQLRequest {
     }
 
 
-    public Cursor getCityForecast(int id) {
-        return database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null, keyId + " asc", null);
+    public City getCityForecast(int id) {
+        Cursor cursor = database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null, keyId + " asc", null);
+        String cityName = cursor.getString(cursor.getColumnIndex(keyCityName));
+        int cityId =  cursor.getInt(cursor.getColumnIndex(keyCityId));
+        String countryName = cursor.getString(cursor.getColumnIndex(keyCountryName));
+        City city = new City(cityName, countryName, cityId);
+        city.tempNow = cursor.getDouble(cursor.getColumnIndex(keyTempNow));
+        city.weatherNow = cursor.getString(cursor.getColumnIndex(keyWeatherNow));
+        city.weatherNowCode = cursor.getInt(cursor.getColumnIndex(keyWeatherCodeNow));
+        for(int i = 0; i < 3; i++){
+            city.tempHigh[i] = cursor.getInt(cursor.getColumnIndex(keyTempHigh[i]));
+            city.weather[i] = cursor.getString(cursor.getColumnIndex(keyWeatherThen[i]));
+            city.tempLow[i] = cursor.getInt(cursor.getColumnIndex(keyTempLow[i]));
+            city.weatherCode[i] = cursor.getInt(cursor.getColumnIndex(keyWeatherCode[i]));
+        }
+        return city;
     }
 
     public void deleteCity(int id) {
