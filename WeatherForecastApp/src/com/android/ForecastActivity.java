@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.WeatherForecastApp.R;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 
@@ -88,8 +89,8 @@ public class ForecastActivity extends Activity {
         weatherText.setText("   " + city.weatherNow);
         imageView.setImageResource(setPicture(city.weatherNowCode));
         for(int i = 0; i < 3; i++){
-            degreesForecast[i].setText(Double.toString(city.tempHigh[i]) + "°C\n"
-                    + Double.toString(city.tempLow[i]) + "°C");
+            degreesForecast[i].setText("from " + Double.toString(city.tempHigh[i]) + "°C\n"
+                    + "to " + Double.toString(city.tempLow[i]) + "°C");
             dates[i].setText(city.dates[i]);
             weatherForecast[i].setText("   " + city.weather[i]);
             images[i].setImageResource(setPicture(city.weatherCode[i]));
@@ -101,12 +102,10 @@ public class ForecastActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weatherforecast);
-        backButton = (Button) findViewById(R.id.backbutton);
         cityNameText = (TextView) findViewById(R.id.citytext);
         dateText = (TextView) findViewById(R.id.daytext);
         degreesText = (TextView) findViewById(R.id.degreestext);
         imageView = (ImageView) findViewById(R.id.imageView);
-        renewButton = (Button) findViewById(R.id.renewbutton);
         weatherText = (TextView)findViewById(R.id.weathertext);
         degreesForecast = new TextView[3];
         degreesForecast[0] = (TextView)findViewById(R.id.degreesday1);
@@ -130,40 +129,8 @@ public class ForecastActivity extends Activity {
         final String cityProp = intent.getStringExtra("cityProp");
         SQLRequest helper = new SQLRequest(this);
         helper.openDB();
-        City city = new City(cityName, cityProp, cityId);
-        WeatherRenew renew = new WeatherRenew();
-        renew.execute(city);
-        try {
-            helper.addCity(renew.get().get(0));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        city = helper.getCityForecast(cityId);
+        City city = helper.getCityForecast(cityId);
         renewFields(city);
-        renewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                City city = new City(cityName, cityProp, cityId);
-                WeatherRenew renew = new WeatherRenew();
-                renew.execute(city);
-                try {
-                    city = renew.get().get(0);
-                } catch (InterruptedException e) {
-                } catch (ExecutionException e) {
-                }
-                renewFields(city);
-
-            }
-        });
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ForecastActivity.this, Main.class);
-                intent.putExtra("cityId", cityId);
-                startActivity(intent);
-            }
-        });
 
     }
 }

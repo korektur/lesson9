@@ -1,9 +1,15 @@
 package com.android;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,7 +29,9 @@ import java.util.Map;
  */
 public class Main extends Activity {
     ListView citiesList;
-
+    private static final int INSERT_ID = Menu.FIRST;
+    private static final int ACTIVITY_CREATE = 0;
+    SQLRequest request;
 
     private void saveCity(String cityName, String cityProp, int cityId) {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
@@ -65,6 +73,13 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        Intent alarmIntent = new Intent(Main.this, Alarm.class);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.cancel(pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 15000, 100000, pendingIntent);
+
         Button settings = (Button) findViewById(R.id.settingbutton);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +88,7 @@ public class Main extends Activity {
                 startActivity(intent);
             }
         });
+        request = new SQLRequest(this);
         Intent intent = getIntent();
         String cityName = intent.getStringExtra("cityName");
         String cityProp = intent.getStringExtra("cityProp");
@@ -86,13 +102,6 @@ public class Main extends Activity {
         final ArrayList<Map<String, Object>> data = getCitiesList();
         SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.citynode, keys, layouts);
         citiesList.setAdapter(adapter);
-        Button renew = (Button) findViewById(R.id.renewAllButton);
-        renew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 
         citiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -109,12 +118,40 @@ public class Main extends Activity {
             }
         });
 
-        citiesList.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+        registerForContextMenu(citiesList);
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, 1, 0, "delete this city");
+        menu.add(0, 2, 1, "cancel");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == 1){
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+            request.openDB();
+            ArrayList<Map<String, Object>> cities = getCitiesList();
+            int id = (Integer)cities.get(info.position).get("cityId");
+            request.deleteCity(id);
+            cities.remove(info.position);
+            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
+            editor.putInt("numOfCities", cities.size());
+            for(int i = 0; i < cities.size(); ++i){
+                editor.putString("cityName" + (i + 1), (String)cities.get(i).get("cityName"));
+                editor.putString("cityProp" + (i + 1), (String)cities.get(i).get("cityProp"));
+                editor.putInt("cityId" + (i + 1), (Integer)cities.get(i).get("cityId"));
+            }
+            editor.commit();
+        }
+        Intent intent = new Intent(Main.this, Main.class);
+        startActivity(intent);
+        return super.onContextItemSelected(item);
     }
 }

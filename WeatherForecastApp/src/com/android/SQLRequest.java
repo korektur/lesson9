@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Ruslan
@@ -100,7 +102,7 @@ public class SQLRequest {
                 values.put(keyTempLow[i], city.tempLow[i]);
                 values.put(keyWeatherCode[i], city.weatherCode[i]);
             }
-            database.delete(weatherTableName, keyCityId + "=?", new String[]{Integer.toString(city.id)});
+            deleteCity(city.id);
             database.insert(weatherTableName, null, values);
         }
     }
@@ -129,7 +131,25 @@ public class SQLRequest {
 
     public void deleteCity(int id) {
         if (opened) {
-            database.delete(weatherTableName, keyCityId + "=" + id, null);
+            database.delete(weatherTableName, keyCityId + "=?", new String[]{Integer.toString(id)});
         }
+    }
+
+    public ArrayList<City> getAllCities() {
+        Cursor cursor = null;
+        ArrayList<City> cities = new ArrayList<City>();
+        if (opened) {
+            cursor = database.query(weatherTableName, null, null, null, null, null, keyId + " asc", null);
+            int size = cursor.getCount();
+            for(int i = 0; i < size; ++i){
+                cursor.moveToNext();
+                String cityName = cursor.getString(cursor.getColumnIndex(keyCityName));
+                int cityId =  cursor.getInt(cursor.getColumnIndex(keyCityId));
+                String countryName = cursor.getString(cursor.getColumnIndex(keyCountryName));
+                City city = new City(cityName, countryName, cityId);
+                cities.add(city);
+            }
+        }
+        return cities;
     }
 }

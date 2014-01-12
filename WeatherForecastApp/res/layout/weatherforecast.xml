@@ -5,21 +5,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Renew"
-                android:id="@+id/renewbutton" android:layout_weight="1"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back"
-                android:id="@+id/backbutton" android:layout_weight="1"/>
-    </LinearLayout>
     <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
