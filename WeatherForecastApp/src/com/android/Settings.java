@@ -67,10 +67,23 @@ public class Settings extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String cityName = Settings.this.cities.get(position);
+                int cityId = Settings.this.id.get(position);
+                String cityProp = Settings.this.prop.get(position);
+                City city = new City(cityName, cityProp, cityId);
+                WeatherRenew renew = new WeatherRenew();
+                renew.execute(city);
                 Intent intent = new Intent(Settings.this, Main.class);
-                intent.putExtra("cityName", Settings.this.cities.get(position));
-                intent.putExtra("cityId", Settings.this.id.get(position));
-                intent.putExtra("cityProp", Settings.this.prop.get(position));
+                intent.putExtra("cityName", cityName);
+                intent.putExtra("cityId", cityId);
+                intent.putExtra("cityProp", cityProp);
+                SQLRequest sqlRequest = new SQLRequest(Settings.this);
+                sqlRequest.openDB();
+                try {
+                    sqlRequest.addCity(renew.get().get(0));
+                } catch (Exception e) {
+
+                }
                 startActivity(intent);
             }
         });

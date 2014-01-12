@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class SQLRequest {
 
-    private static final String DataBaseName = "WeatherForecasts";
+    private static final String DataBaseName = "WeatherForecast";
 
     private static final String weatherTableName = "WeatherTable";
     private static final String keyTempNow = "tempNowKey";
@@ -28,6 +28,7 @@ public class SQLRequest {
     private static final String keyCityId = "cityId";
     private static final String keyCountryName = "countryKey";
     private static final String keyCityName = "cityNameKey";
+    private static final String keyDateNow = "dateKey";
     private static final String[] keyDate = {"date1Key", "date2Key", "date3Key"};
     private static final int Database_Version = 1;
 
@@ -39,14 +40,14 @@ public class SQLRequest {
 
 
     private static final String weatherDataBaseCreator = "CREATE TABLE " + weatherTableName + " (" + keyId +
-            " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName + " TEXT NOT NULL, "
-            + keyTempNow + " DOUBLE, " + keyWeatherNow + " TEXT NOT NULL, " + keyTempLow[0] + " DOUBLE, " +
+            " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName + " TEXT NOT NULL, " +
+            keyTempNow + " DOUBLE, " + keyWeatherNow + " TEXT NOT NULL, " + keyTempLow[0] + " DOUBLE, " +
             keyTempLow[1] + " DOUBLE, " + keyTempLow[2] + " DOUBLE, " + keyTempHigh[0] + " TEXT NOT NULL, " +
             keyTempHigh[1] + " TEXT NOT NULL, " + keyTempHigh[2] + " TEXT NOT NULL, " + keyWeatherThen[0] + " TEXT NOT NULL, " +
-            keyWeatherThen[2] + " TEXT NOT NULL, " + keyWeatherThen[3] + " TEXT NOT NULL, " + keyDate[0] + " TEXT NOT NULL, "
-            + keyDate[1] + " TEXT NOT NULL, " + keyDate[2] + " TEXT NOT NULL, " + keyCityId + " INTEGER, " +
-            keyWeatherCodeNow + " TEXT NOT NULL, " + keyWeatherCode[0] + " TEXT NOT NULL, " + keyWeatherCode[1] + " TEXT NOT NULL, " +
-            keyWeatherCode[2] + " TEXT NOT NULL);";
+            keyWeatherThen[1] + " TEXT NOT NULL, " + keyWeatherThen[2] + " TEXT NOT NULL, " + keyDateNow + " TEXT NOT NULL, " +
+            keyDate[0] + " TEXT NOT NULL, " + keyDate[1] + " TEXT NOT NULL, " + keyDate[2] + " TEXT NOT NULL, " +
+            keyCityId + " INTEGER, " + keyWeatherCodeNow + " TEXT NOT NULL, " + keyWeatherCode[0] + " TEXT NOT NULL, " +
+            keyWeatherCode[1] + " TEXT NOT NULL, " + keyWeatherCode[2] + " TEXT NOT NULL);";
 
     private static class DBHelper extends SQLiteOpenHelper {
         public DBHelper(Context context) {
@@ -70,11 +71,19 @@ public class SQLRequest {
     }
 
     public void openDB() {
+        helper = new DBHelper(context);
+        database = helper.getWritableDatabase();
         opened = true;
+    }
+
+    public void closeDB(){
+        helper.close();
+        opened = false;
     }
 
     public void addCity(City city) {
         if (opened) {
+
             ContentValues values = new ContentValues();
             values.put(keyCityName, city.name);
             values.put(keyCityId, city.id);
@@ -82,21 +91,24 @@ public class SQLRequest {
             values.put(keyTempNow, city.tempNow);
             values.put(keyWeatherNow, city.weatherNow);
             values.put(keyWeatherCodeNow, city.weatherNowCode);
+            values.put(keyDateNow, city.date);
             for (int i = 0; i < 3; i++) {
+                values.put(keyDate[i], city.dates[i]);
                 values.put(keyTempLow[i], city.tempHigh[i]);
                 values.put(keyWeatherThen[i], city.weather[i]);
                 values.put(keyTempHigh[i], city.tempHigh[i]);
                 values.put(keyTempLow[i], city.tempLow[i]);
                 values.put(keyWeatherCode[i], city.weatherCode[i]);
             }
-
+            database.delete(weatherTableName, keyCityId + "=?", new String[]{Integer.toString(city.id)});
             database.insert(weatherTableName, null, values);
         }
     }
 
 
     public City getCityForecast(int id) {
-        Cursor cursor = database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null, keyId + " asc", null);
+        Cursor cursor = database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null,  null);
+        cursor.moveToNext();
         String cityName = cursor.getString(cursor.getColumnIndex(keyCityName));
         int cityId =  cursor.getInt(cursor.getColumnIndex(keyCityId));
         String countryName = cursor.getString(cursor.getColumnIndex(keyCountryName));
@@ -104,7 +116,9 @@ public class SQLRequest {
         city.tempNow = cursor.getDouble(cursor.getColumnIndex(keyTempNow));
         city.weatherNow = cursor.getString(cursor.getColumnIndex(keyWeatherNow));
         city.weatherNowCode = cursor.getInt(cursor.getColumnIndex(keyWeatherCodeNow));
+        city.date = cursor.getString(cursor.getColumnIndex(keyDateNow));
         for(int i = 0; i < 3; i++){
+            city.dates[i] = cursor.getString(cursor.getColumnIndex(keyDate[i]));
             city.tempHigh[i] = cursor.getInt(cursor.getColumnIndex(keyTempHigh[i]));
             city.weather[i] = cursor.getString(cursor.getColumnIndex(keyWeatherThen[i]));
             city.tempLow[i] = cursor.getInt(cursor.getColumnIndex(keyTempLow[i]));

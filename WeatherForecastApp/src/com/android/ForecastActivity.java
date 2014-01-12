@@ -128,8 +128,18 @@ public class ForecastActivity extends Activity {
         final int cityId = intent.getIntExtra("cityId", 0);
         final String cityName = intent.getStringExtra("cityName");
         final String cityProp = intent.getStringExtra("cityProp");
-
-
+        SQLRequest helper = new SQLRequest(this);
+        helper.openDB();
+        City city = new City(cityName, cityProp, cityId);
+        WeatherRenew renew = new WeatherRenew();
+        renew.execute(city);
+        try {
+            helper.addCity(renew.get().get(0));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        city = helper.getCityForecast(cityId);
+        renewFields(city);
         renewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +152,7 @@ public class ForecastActivity extends Activity {
                 } catch (ExecutionException e) {
                 }
                 renewFields(city);
+
             }
         });
 
