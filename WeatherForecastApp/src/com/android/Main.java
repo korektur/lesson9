@@ -38,7 +38,7 @@ public class Main extends Activity {
         int numOfCities = preferences.getInt("numOfCities", 0);
         boolean added = false;
         for (int i = 0; i < numOfCities && !added; i++) {
-            int id = preferences.getInt("cityId" + i, 0);
+            int id = preferences.getInt("cityId" + (i  + 1), 0);
             if (id == cityId)
                 added = true;
         }
@@ -131,11 +131,11 @@ public class Main extends Activity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == 1){
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        if (item.getItemId() == 1) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             request.openDB();
             ArrayList<Map<String, Object>> cities = getCitiesList();
-            int id = (Integer)cities.get(info.position).get("cityId");
+            int id = (Integer) cities.get(info.position).get("cityId");
             request.deleteCity(id);
             cities.remove(info.position);
             SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
@@ -143,10 +143,10 @@ public class Main extends Activity {
             editor.clear();
             editor.commit();
             editor.putInt("numOfCities", cities.size());
-            for(int i = 0; i < cities.size(); ++i){
-                editor.putString("cityName" + (i + 1), (String)cities.get(i).get("cityName"));
-                editor.putString("cityProp" + (i + 1), (String)cities.get(i).get("cityProp"));
-                editor.putInt("cityId" + (i + 1), (Integer)cities.get(i).get("cityId"));
+            for (int i = 0; i < cities.size(); ++i) {
+                editor.putString("cityName" + (i + 1), (String) cities.get(i).get("cityName"));
+                editor.putString("cityProp" + (i + 1), (String) cities.get(i).get("cityProp"));
+                editor.putInt("cityId" + (i + 1), (Integer) cities.get(i).get("cityId"));
             }
             editor.commit();
         }
