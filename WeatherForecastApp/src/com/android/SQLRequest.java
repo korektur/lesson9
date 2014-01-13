@@ -40,7 +40,6 @@ public class SQLRequest {
     private DBHelper helper;
 
 
-
     private static final String weatherDataBaseCreator = "CREATE TABLE " + weatherTableName + " (" + keyId +
             " INTEGER PRIMARY KEY AUTOINCREMENT, " + keyCityName + " TEXT NOT NULL, " + keyCountryName + " TEXT NOT NULL, " +
             keyTempNow + " DOUBLE, " + keyWeatherNow + " TEXT NOT NULL, " + keyTempLow[0] + " DOUBLE, " +
@@ -78,7 +77,7 @@ public class SQLRequest {
         opened = true;
     }
 
-    public void closeDB(){
+    public void closeDB() {
         helper.close();
         opened = false;
     }
@@ -109,17 +108,17 @@ public class SQLRequest {
 
 
     public City getCityForecast(int id) {
-        Cursor cursor = database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null,  null);
+        Cursor cursor = database.query(weatherTableName, null, keyCityId + "=" + id, null, null, null, null);
         cursor.moveToNext();
         String cityName = cursor.getString(cursor.getColumnIndex(keyCityName));
-        int cityId =  cursor.getInt(cursor.getColumnIndex(keyCityId));
+        int cityId = cursor.getInt(cursor.getColumnIndex(keyCityId));
         String countryName = cursor.getString(cursor.getColumnIndex(keyCountryName));
         City city = new City(cityName, countryName, cityId);
         city.tempNow = cursor.getDouble(cursor.getColumnIndex(keyTempNow));
         city.weatherNow = cursor.getString(cursor.getColumnIndex(keyWeatherNow));
         city.weatherNowCode = cursor.getInt(cursor.getColumnIndex(keyWeatherCodeNow));
         city.date = cursor.getString(cursor.getColumnIndex(keyDateNow));
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             city.dates[i] = cursor.getString(cursor.getColumnIndex(keyDate[i]));
             city.tempHigh[i] = cursor.getInt(cursor.getColumnIndex(keyTempHigh[i]));
             city.weather[i] = cursor.getString(cursor.getColumnIndex(keyWeatherThen[i]));
@@ -136,15 +135,15 @@ public class SQLRequest {
     }
 
     public ArrayList<City> getAllCities() {
-        Cursor cursor = null;
+        Cursor cursor;
         ArrayList<City> cities = new ArrayList<City>();
         if (opened) {
             cursor = database.query(weatherTableName, null, null, null, null, null, keyId + " asc", null);
             int size = cursor.getCount();
-            for(int i = 0; i < size; ++i){
+            for (int i = 0; i < size; ++i) {
                 cursor.moveToNext();
                 String cityName = cursor.getString(cursor.getColumnIndex(keyCityName));
-                int cityId =  cursor.getInt(cursor.getColumnIndex(keyCityId));
+                int cityId = cursor.getInt(cursor.getColumnIndex(keyCityId));
                 String countryName = cursor.getString(cursor.getColumnIndex(keyCountryName));
                 City city = new City(cityName, countryName, cityId);
                 cities.add(city);

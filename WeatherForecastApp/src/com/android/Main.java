@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,8 +28,6 @@ import java.util.Map;
  */
 public class Main extends Activity {
     ListView citiesList;
-    private static final int INSERT_ID = Menu.FIRST;
-    private static final int ACTIVITY_CREATE = 0;
     SQLRequest request;
 
     private void saveCity(String cityName, String cityProp, int cityId) {
@@ -108,12 +105,8 @@ public class Main extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int cityId = (Integer) data.get(position).get("cityId");
-                String cityName = (String) data.get(position).get("cityName");
-                String cityProp = (String) data.get(position).get("cityProp");
                 Intent intent = new Intent(Main.this, ForecastActivity.class);
                 intent.putExtra("cityId", cityId);
-                intent.putExtra("cityName", cityName);
-                intent.putExtra("cityProp", cityProp);
                 startActivity(intent);
             }
         });
@@ -151,6 +144,7 @@ public class Main extends Activity {
             editor.commit();
         }
         Intent intent = new Intent(Main.this, Main.class);
+        request.closeDB();
         startActivity(intent);
         return super.onContextItemSelected(item);
     }

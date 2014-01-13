@@ -10,7 +10,6 @@ import com.example.WeatherForecastApp.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,8 +57,7 @@ public class Settings extends Activity {
                         SimpleAdapter adapter = new SimpleAdapter(Settings.this, parsedData, R.layout.citynode, keys, layouts);
                         listView.setAdapter(adapter);
                     }
-                } catch (ExecutionException e) {
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                 }
             }
         });
@@ -84,6 +82,7 @@ public class Settings extends Activity {
                 } catch (Exception e) {
 
                 }
+                sqlRequest.closeDB();
                 startActivity(intent);
             }
         });

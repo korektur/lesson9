@@ -4,12 +4,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -41,7 +38,7 @@ public class WeatherParser {
                         city.tempNow = Double.parseDouble(description.getAttribute("temp"));
                         city.date = description.getAttribute("date");
                     } else {
-                        if ("yweather:forecast".equals(elem.getNodeName()) && j < 3){
+                        if ("yweather:forecast".equals(elem.getNodeName()) && j < 3) {
                             Element forecast = (Element) elem;
                             city.dates[j] = forecast.getAttribute("date");
                             city.tempLow[j] = Double.parseDouble(forecast.getAttribute("low"));
@@ -54,9 +51,7 @@ public class WeatherParser {
                     }
                 }
             }
-        } catch (ParserConfigurationException e) {
-        } catch (IOException e) {
-        } catch (SAXException e) {
+        } catch (Exception e) {
         }
         return city;
     }

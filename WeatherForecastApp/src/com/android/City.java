@@ -21,7 +21,7 @@ public class City {
     String[] dates;
     String date;
 
-    public City(String name, String country, int id){
+    public City(String name, String country, int id) {
         this.name = name;
         this.country = country;
         this.id = id;
@@ -30,6 +30,7 @@ public class City {
         tempLow = new double[3];
         weather = new String[3];
         dates = new String[3];
+        date = "";
     }
 
 }

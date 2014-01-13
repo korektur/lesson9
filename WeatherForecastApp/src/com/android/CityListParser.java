@@ -5,12 +5,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +39,7 @@ public class CityListParser {
                 for (int j = 0; j < keys.length; j++) {
                     Node child = elements[j].getFirstChild();
                     String attribute = "";
-                    if (child != null){
+                    if (child != null) {
                         attribute = child.getNodeValue();
                     }
                     parsedNode.put(keys[j], attribute);
@@ -50,9 +47,7 @@ public class CityListParser {
                 data.add(parsedNode);
             }
 
-        } catch (ParserConfigurationException e) {
-        } catch (IOException e) {
-        } catch (SAXException e) {
+        } catch (Exception e) {
         }
         return data;
     }

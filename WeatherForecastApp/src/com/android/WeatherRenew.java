@@ -3,14 +3,13 @@ package com.android;
 import android.os.AsyncTask;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Руслан
@@ -27,7 +26,7 @@ public class WeatherRenew extends AsyncTask<City, Void, ArrayList<City>> {
         ArrayList<City> cities = new ArrayList<City>();
         HttpResponse response;
         InputStream inputStream;
-        for (City c: city) {
+        for (City c : city) {
             String link = requestLink + c.id + "&u=c";
             HttpGet httpGet = new HttpGet(link);
             try {
@@ -35,8 +34,7 @@ public class WeatherRenew extends AsyncTask<City, Void, ArrayList<City>> {
                 HttpEntity entity = response.getEntity();
                 inputStream = entity.getContent();
                 cities.add(WeatherParser.Parse(inputStream, c));
-            } catch (ClientProtocolException e) {
-            } catch (IOException e) {
+            } catch (Exception e) {
             }
 
         }

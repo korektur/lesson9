@@ -2,10 +2,8 @@ package com.android;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.database.Cursor;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +23,7 @@ public class Alarm extends IntentService {
         ArrayList<City> cities = sqlRequest.getAllCities();
         WeatherRenew weatherRenew = new WeatherRenew();
         City[] city = new City[cities.size()];
-        for(int i = 0; i < cities.size(); ++i){
+        for (int i = 0; i < cities.size(); ++i) {
             city[i] = cities.get(i);
         }
         weatherRenew.execute(city);
@@ -33,12 +31,12 @@ public class Alarm extends IntentService {
             cities = weatherRenew.get();
         } catch (Exception e) {
         }
-        ;
-        for(City c: cities){
-            if (c.date != ""){
+        for (City c : cities) {
+            if (!c.date.isEmpty()) {
                 sqlRequest.addCity(c);
 
             }
         }
+        sqlRequest.closeDB();
     }
 }
